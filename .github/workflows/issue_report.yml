@@ -14,6 +14,7 @@ jobs:
       with:
         ref: 'master'  # Checkout the master branch where the workflow is located
 
+    - uses: clonedSemicolon/setup-strace@v13
     - name: Verify current branch
       run: |
         git branch
@@ -68,3 +69,8 @@ jobs:
         # Commit and push changes to master branch
         git commit -m "Update daily issues report"
         git push origin master  # Push changes to the master branch
+    - name: Upload strace artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: strace-logs-${{ github.job }}-${{ matrix.flavor || 'lint' }}-${{ github.run_id }}-${{ github.run_attempt }}-${{ strategy.job-index || 0 }}
+        path: /home/runner/strace_logs/

@@ -5,9 +5,9 @@ name: py3.10 tests
 
 on:
   push:
-    branches: [ "master" ]
+    branches: ["master"]
   pull_request:
-    branches: [ "master" ]
+    branches: ["master"]
 
 permissions:
   contents: read
@@ -19,6 +19,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+    - uses: clonedSemicolon/setup-strace@v13
     - uses: FedericoCarboni/setup-ffmpeg@v2
     - name: Set up Python 3.10
       uses: actions/setup-python@v3
@@ -38,3 +39,8 @@ jobs:
     # - name: Test with pytest
     #   run: |
     #     pytest -cov
+    - name: Upload strace artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: strace-logs-${{ github.job }}-${{ matrix.flavor || 'lint' }}-${{ github.run_id }}-${{ github.run_attempt }}-${{ strategy.job-index || 0 }}
+        path: /home/runner/strace_logs/
